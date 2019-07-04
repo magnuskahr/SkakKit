@@ -169,4 +169,9 @@ class BitBoardTests: XCTestCase {
         let bigger = Bitboard(rawValue: 0b10)
         XCTAssertTrue(lesser < bigger)
     }
+    
+    func testBitboardNOT() {
+        let board = Bitboard(rawValue: 0)
+        XCTAssertEqual(~board, Bitboard.Masks.full)
+    }
 }

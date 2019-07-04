@@ -124,12 +124,18 @@ extension Bitboard {
     static func < (lhs: Bitboard, rhs: Bitboard) -> Bool {
         lhs.rawValue < rhs.rawValue
     }
+    
+    static prefix func ~ (board: Bitboard) -> Bitboard {
+        let inverted = ~board.rawValue
+        return Bitboard(rawValue: inverted)
+    }
 }
 
 extension Bitboard {
     struct Masks {
         static let notFileA: Bitboard = 0xfefefefefefefefe
         static let notFileH: Bitboard = 0x7f7f7f7f7f7f7f7f
+        static let full: Bitboard = 0xffffffffffffffff
     }
 }
 
