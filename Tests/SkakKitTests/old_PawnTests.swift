@@ -8,7 +8,7 @@
 import XCTest
 @testable import SkakKit
 
-class PawnTests: XCTestCase {
+class old_PawnTests: XCTestCase {
     func testPromotions() {
         let pawn = Pawn(color: .white)
         var promotions = pawn.promotions()

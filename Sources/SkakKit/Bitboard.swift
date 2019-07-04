@@ -7,37 +7,9 @@
 
 import Foundation
 
-protocol BBPiece {
-    func attacks(on board: Bitboard,  with color: Color) -> Bitboard
-}
-
 struct BBIdentifier {
     let piece: BBPiece
     let color: Color
-}
-
-struct BBPawn: BBPiece {
-    func attacks(on board: Bitboard, with color: Color) -> Bitboard {
-        switch color {
-        case .black:
-            
-            let rightAttack = board >> 9 & Bitboard.Masks.notFileH
-            let leftAttack = board >> 7 & Bitboard.Masks.notFileA
-            
-            return leftAttack | rightAttack
-            
-        case .white:
-            
-            let rightAttack = board << 9 & Bitboard.Masks.notFileA
-            let leftAttack = board << 7 & Bitboard.Masks.notFileH
-            
-            return leftAttack | rightAttack
-        }
-    }
-}
-
-enum BPiece {
-    case pawn, bishop, rook, knight, queen, king
 }
 
 struct Bitboard: Equatable {
