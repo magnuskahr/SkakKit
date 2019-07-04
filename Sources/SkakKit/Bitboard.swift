@@ -7,35 +7,45 @@
 
 import Foundation
 
+protocol BBPiece {
+    func attacks(on board: Bitboard,  with color: Color) -> Bitboard
+}
+
+struct BBIdentifier {
+    let piece: BBPiece
+    let color: Color
+}
+
+struct BBPawn: BBPiece {
+    func attacks(on board: Bitboard, with color: Color) -> Bitboard {
+        switch color {
+        case .black:
+            
+            let rightAttack = board >> 9 & Bitboard.Masks.notFileH
+            let leftAttack = board >> 7 & Bitboard.Masks.notFileA
+            
+            return leftAttack | rightAttack
+            
+        case .white:
+            
+            let rightAttack = board << 9 & Bitboard.Masks.notFileA
+            let leftAttack = board << 7 & Bitboard.Masks.notFileH
+            
+            return leftAttack | rightAttack
+        }
+    }
+}
+
 enum BPiece {
     case pawn, bishop, rook, knight, queen, king
 }
 
-struct Bitboard {
+struct Bitboard: Equatable {
     
-    let color: Color
-    let piece: BPiece
+    private(set) var rawValue: UInt64 = 0
     
-    init(color: Color, piece: BPiece) {
-        self.color = color
-        self.piece = piece
-    }
-    
-    private var data: UInt64 = 0
-    
-    /// Marks a position as occupied, will return wether it was successfull or not
-    /// A possition can be marked if the representing value will be higher.
-    /// - Parameter file: the file to mark
-    /// - Parameter rank: the rank to mark
-    mutating func mark(file: File, rank: Rank) -> Bool {
-        let markedPosition = position(file: file, rank: rank)
-        let newData = data ^ markedPosition
-        guard newData > data else {
-            return false
-        }
-        
-        data = newData
-        return true
+    init(rawValue: UInt64) {
+        self.rawValue = rawValue
     }
     
     /// Marks a bitboard corresponding to the file/rank pair, and returns as a 64bit number.
@@ -52,22 +62,109 @@ struct Bitboard {
     /// 09 10 11 12 13 14 15 16
     /// 01 02 03 04 05 06 07 08
     /// ```
-    internal func position(file: File, rank: Rank) -> UInt64 {
-        let exponent = Double(rank.rawValue - 1) * 8 + Double(file.rawValue) - 1
+    init(marked position: Position) {
+        let file = Double(position.file.rawValue)
+        let rank = Double(position.rank.rawValue)
+        let exponent = (rank - 1) * 8 + file - 1
         let value = pow(2.0, exponent)
-        return UInt64(value)
+        self.rawValue = UInt64(value)
+    }
+    
+    init() {}
+    
+    /// Marks a position as occupied, will return wether it was successfull or not
+    /// A possition can be marked if the representing value will be higher.
+    /// - Parameter file: the file to mark
+    /// - Parameter rank: the rank to mark
+    @discardableResult
+    mutating func mark(_ position: Position) -> Bool {
+        let markedPosition = Bitboard(marked: position)
+        let newData = self ^ markedPosition
+        guard newData > self else {
+            return false
+        }
+        
+        self = newData
+        return true
+    }
+    
+    @discardableResult
+    mutating func clear(_ position: Position) -> Bool {
+        let markedPosition = Bitboard(marked: position)
+        let newData = self ^ markedPosition
+        guard newData < self else {
+            return false
+        }
+        self = newData
+        return true
+    }
+    
+    func attacks(as piece: BBPiece, colored color: Color) -> Bitboard {
+        return piece.attacks(on: self, with: color)
+    }
+}
+
+extension Bitboard: ExpressibleByIntegerLiteral {
+    public init(integerLiteral value: UInt64) {
+        self.init(rawValue: value)
+    }
+}
+
+extension Bitboard {
+    static func << (lhs: Bitboard, rhs: Bitboard) -> Bitboard {
+        let shifted = lhs.rawValue << rhs.rawValue
+        return Bitboard(rawValue: shifted)
+    }
+    
+    
+    static func >> (lhs: Bitboard, rhs: Bitboard) -> Bitboard {
+        let shifted = lhs.rawValue >> rhs.rawValue
+        return Bitboard(rawValue: shifted)
+    }
+    
+    static func <<= (lhs: inout Bitboard, rhs: Bitboard) {
+        lhs = lhs << rhs
+    }
+    
+    static func >>= (lhs: inout Bitboard, rhs: Bitboard) {
+        lhs = lhs >> rhs
+    }
+    
+    static func & (lhs: Bitboard, rhs: Bitboard) -> Bitboard {
+        let ANDed = lhs.rawValue & rhs.rawValue
+        return Bitboard(rawValue: ANDed)
+    }
+    
+    static func | (lhs: Bitboard, rhs: Bitboard) -> Bitboard {
+        let ORed = lhs.rawValue | rhs.rawValue
+        return Bitboard(rawValue: ORed)
+    }
+    
+    static func ^ (lhs: Bitboard, rhs: Bitboard) -> Bitboard {
+        let XORed = lhs.rawValue ^ rhs.rawValue
+        return Bitboard(rawValue: XORed)
+    }
+    
+    static func > (lhs: Bitboard, rhs: Bitboard) -> Bool {
+        lhs.rawValue > rhs.rawValue
+    }
+    
+    static func < (lhs: Bitboard, rhs: Bitboard) -> Bool {
+        lhs.rawValue < rhs.rawValue
     }
 }
 
 extension Bitboard {
     struct Masks {
+        static let notFileA: Bitboard = 0xfefefefefefefefe
+        static let notFileH: Bitboard = 0x7f7f7f7f7f7f7f7f
     }
 }
 
 extension Bitboard: CustomStringConvertible {
     
     var description: String {
-        return data.words.reduce(into: "") {
+        return rawValue.words.reduce(into: "") {
             $0.append(contentsOf: repeatElement("0", count: $1.leadingZeroBitCount))
             if $1 != 0 {
                 $0.append(String($1, radix: 2))
