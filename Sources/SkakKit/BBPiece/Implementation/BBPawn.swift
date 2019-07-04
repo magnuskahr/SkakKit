@@ -17,15 +17,15 @@ struct BBPawn: BBPiece {
     }
     
     internal func attacksUp(on board: Bitboard) -> Bitboard {
-        let rightAttack = board << 9 & Bitboard.Masks.notFileA
-        let leftAttack = board << 7 & Bitboard.Masks.notFileH
+        let rightAttack = board << 9 & ~Bitboard.Masks.fileA
+        let leftAttack = board << 7 & (~Bitboard.Masks.fileH)
         
         return leftAttack | rightAttack
     }
     
     internal func attacksDown(on board: Bitboard) -> Bitboard {
-        let rightAttack = board >> 9 & Bitboard.Masks.notFileH
-        let leftAttack = board >> 7 & Bitboard.Masks.notFileA
+        let rightAttack = board >> 9 & ~Bitboard.Masks.fileH
+        let leftAttack = board >> 7 & ~Bitboard.Masks.fileA
         
         return leftAttack | rightAttack
     }

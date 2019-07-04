@@ -133,9 +133,15 @@ extension Bitboard {
 
 extension Bitboard {
     struct Masks {
-        static let notFileA: Bitboard = 0xfefefefefefefefe
-        static let notFileH: Bitboard = 0x7f7f7f7f7f7f7f7f
         static let full: Bitboard = 0xffffffffffffffff
+        static let fileA: Bitboard = 0x101010101010101
+        static let fileB: Bitboard = 0x202020202020202
+        static let fileC: Bitboard = 0x404040404040404
+        static let fileD: Bitboard = 0x808080808080808
+        static let fileE: Bitboard = 0x1010101010101010
+        static let fileF: Bitboard = 0x2020202020202020
+        static let fileG: Bitboard = 0x4040404040404040
+        static let fileH: Bitboard = 0x8080808080808080
     }
 }
 
