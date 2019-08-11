@@ -8,10 +8,8 @@
 import Foundation
 
 struct Position {
-    
     let file: File
     let rank: Rank
-    
 }
 
 extension Position: Equatable { }

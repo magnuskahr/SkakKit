@@ -8,7 +8,7 @@
 import Foundation
 
 enum Rank: Int {
-    case one = 1, two, three, four, five, six, seven, eight
+    case one, two, three, four, five, six, seven, eight
 }
 
 extension Rank: CaseIterable { }

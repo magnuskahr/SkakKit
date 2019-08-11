@@ -35,11 +35,10 @@ struct Bitboard: Equatable {
     /// 01 02 03 04 05 06 07 08
     /// ```
     init(marked position: Position) {
-        let file = Double(position.file.rawValue)
-        let rank = Double(position.rank.rawValue)
-        let exponent = (rank - 1) * 8 + file - 1
-        let value = pow(2.0, exponent)
-        self.rawValue = UInt64(value)
+        let file = position.file.rawValue
+        let rank = position.rank.rawValue
+        let exponent = rank * 8 + file
+        self.rawValue = 1 << exponent
     }
     
     init() {}
@@ -88,7 +87,6 @@ extension Bitboard {
         return Bitboard(rawValue: shifted)
     }
     
-    
     static func >> (lhs: Bitboard, rhs: Bitboard) -> Bitboard {
         let shifted = lhs.rawValue >> rhs.rawValue
         return Bitboard(rawValue: shifted)
@@ -132,8 +130,9 @@ extension Bitboard {
 }
 
 extension Bitboard {
+    /// Hexidecimal masks
     struct Masks {
-        static let full: Bitboard = 0xffffffffffffffff
+        static let full: Bitboard  = 0xffffffffffffffff
         static let fileA: Bitboard = 0x101010101010101
         static let fileB: Bitboard = 0x202020202020202
         static let fileC: Bitboard = 0x404040404040404

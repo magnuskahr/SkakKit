@@ -8,7 +8,7 @@
 import Foundation
 
 enum File: Int {
-    case A = 1, B, C, D, E, F, G, H
+    case A, B, C, D, E, F, G, H
 }
 
 extension File: CaseIterable { }

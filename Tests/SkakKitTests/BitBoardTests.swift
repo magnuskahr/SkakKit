@@ -41,6 +41,12 @@ class BitBoardTests: XCTestCase {
         XCTAssertEqual(marked, 0b1000000000)
     }
     
+    func testBitboardMarksA8() {
+        let marked = Bitboard(marked: Position(file: .A, rank: .eight))
+        XCTAssertEqual(marked, 0b1_00000000_00000000_00000000_00000000_00000000_00000000_00000000)
+        print(marked.ascii)
+    }
+    
     func testMarksPositionA1() {
         let marks = bitboard.mark(Position(file: .A, rank: .one))
         XCTAssertTrue(marks)
