@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Rank: Int {
+public enum Rank: Int {
     case one, two, three, four, five, six, seven, eight
 }
 

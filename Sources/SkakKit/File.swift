@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum File: Int {
+public enum File: Int {
     case A, B, C, D, E, F, G, H
 }
 
