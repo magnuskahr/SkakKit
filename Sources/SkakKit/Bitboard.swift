@@ -48,7 +48,7 @@ public struct Bitboard: Equatable {
     /// - Parameter file: the file to mark
     /// - Parameter rank: the rank to mark
     @discardableResult
-    mutating func mark(_ position: Position) -> Bool {
+    public mutating func mark(_ position: Position) -> Bool {
         let markedPosition = Bitboard(marked: position)
         let newData = self ^ markedPosition
         guard newData > self else {
@@ -60,7 +60,7 @@ public struct Bitboard: Equatable {
     }
     
     @discardableResult
-    mutating func clear(_ position: Position) -> Bool {
+    public mutating func clear(_ position: Position) -> Bool {
         let markedPosition = Bitboard(marked: position)
         let newData = self ^ markedPosition
         guard newData < self else {
@@ -203,7 +203,7 @@ extension Bitboard {
 
 extension Bitboard: CustomStringConvertible {
     
-    var description: String {
+    public var description: String {
         return rawValue.words.reduce(into: "") {
             $0.append(contentsOf: repeatElement("0", count: $1.leadingZeroBitCount))
             if $1 != 0 {

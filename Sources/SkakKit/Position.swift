@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Position {
+public struct Position {
     let file: File
     let rank: Rank
 }
