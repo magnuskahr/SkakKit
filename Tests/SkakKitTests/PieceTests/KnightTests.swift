@@ -10,7 +10,7 @@ import XCTest
 
 class KnightTests: XCTestCase {
     
-    let knight = BBKnight()
+    let knight = Knight(color: .white)
     var board: Bitboard!
     
     override func setUp() {

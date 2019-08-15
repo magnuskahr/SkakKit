@@ -7,7 +7,10 @@
 
 import Foundation
 
-struct BBPawn: BBPiece {
+struct Pawn: Piece {
+    
+    var representation = "p"
+    var color: Color
     
     func attacks(on board: Bitboard, with color: Color) -> Bitboard {
         switch color {

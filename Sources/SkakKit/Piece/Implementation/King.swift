@@ -7,7 +7,11 @@
 
 import Foundation
 
-struct BBKing: BBPiece {
+struct King: Piece {
+    
+    var representation = "k"
+    var color: Color
+    
     
     /// We denote the attacks by the king as following:
     /// 1   2   3

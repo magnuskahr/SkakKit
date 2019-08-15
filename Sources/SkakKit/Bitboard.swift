@@ -8,7 +8,7 @@
 import Foundation
 
 struct BBIdentifier {
-    let piece: BBPiece
+    let piece: Piece
     let color: Color
 }
 
@@ -70,8 +70,64 @@ struct Bitboard: Equatable {
         return true
     }
     
-    func attacks(as piece: BBPiece, colored color: Color) -> Bitboard {
+    func attacks(as piece: Piece, colored color: Color) -> Bitboard {
         return piece.attacks(on: self, with: color)
+    }
+    
+    /// Returns the number of pieces this bitboard represents
+    var pieceCount: Int {
+        self.rawValue.nonzeroBitCount
+    }
+    
+    /// Returns `true` if the board contains pieces, `false` if not
+    var isEmpty: Bool {
+        self == 0
+    }
+    
+    /// Returns the pieces on the board isolated to each own bitboard.
+    /// If no pieces are represent, an empty array will be returned
+    func isolatedPieces() -> [Bitboard] {
+        
+        guard isEmpty == false else {
+            return []
+        }
+        
+        guard pieceCount > 1 else {
+            return [self]
+        }
+        
+        var bitboards = [Bitboard]()
+        var positionToCheck: UInt64 = 0
+        
+        #warning("rewrite to some better algorithm, maybe with SMID?")
+        while bitboards.count < pieceCount && positionToCheck < 64 {
+            let suggestion = Bitboard(rawValue: 1 << positionToCheck)
+            if self & suggestion > 0 {
+                bitboards.append(suggestion)
+            }
+            positionToCheck += 1
+        }
+        
+        return bitboards
+    }
+    
+    /// Based on the "The parallel prefix-algorithm" from https://www.chessprogramming.org/Flipping_Mirroring_and_Rotating#Horizontal
+    internal func horizontalMirror() -> Bitboard {
+        var mirror = self
+        
+        let k1: Bitboard = 0x5555555555555555
+        let k2: Bitboard = 0x3333333333333333
+        let k4: Bitboard = 0x0f0f0f0f0f0f0f0f
+        
+        mirror = ((mirror >> 1) & k1) | ((mirror & k1) << 1)
+        mirror = ((mirror >> 2) & k2) | ((mirror & k2) << 2)
+        mirror = ((mirror >> 4) & k4) | ((mirror & k4) << 4)
+        
+        return mirror
+    }
+    
+    internal func verticalMirror() -> Bitboard {
+        return Bitboard(rawValue: rawValue.byteSwapped)
     }
 }
 
@@ -110,6 +166,7 @@ extension Bitboard {
         return Bitboard(rawValue: ORed)
     }
     
+    /// XOR of the bitboards
     static func ^ (lhs: Bitboard, rhs: Bitboard) -> Bitboard {
         let XORed = lhs.rawValue ^ rhs.rawValue
         return Bitboard(rawValue: XORed)

@@ -180,4 +180,158 @@ class BitBoardTests: XCTestCase {
         let board = Bitboard(rawValue: 0)
         XCTAssertEqual(~board, Bitboard.Masks.full)
     }
+    
+    func testEmptyBitboardCount() {
+        let board = Bitboard()
+        XCTAssertEqual(board.pieceCount, 0)
+    }
+    
+    func testBitboardCountSinglePiece() {
+        let board = Bitboard(rawValue: 0b1)
+        XCTAssertEqual(board.pieceCount, 1)
+    }
+    
+    func testBitboardCountMultiplePieces() {
+        var board = Bitboard(rawValue: 0b1)
+        board.mark(Position(file: .H, rank: .eight))
+        XCTAssertEqual(board.pieceCount, 2)
+    }
+    
+    func testBitboardEmptyIsolatedPieces() {
+        let board = Bitboard()
+        XCTAssertEqual(board.isolatedPieces(), [])
+    }
+    
+    func testBitboardSingleIsolatedPiece() {
+        let board = Bitboard(rawValue: 0b00000001)
+        let isolated = board.isolatedPieces().first
+        XCTAssertEqual(board, isolated)
+    }
+    
+    func testBitboardTwoeIsolatedPieces() {
+        let H8 = Position(file: .H, rank: .eight)
+        let C3 = Position(file: .C, rank: .three)
+        var board = Bitboard()
+        board.mark(H8)
+        board.mark(C3)
+        
+        let isolated = board.isolatedPieces()
+        XCTAssertEqual(isolated.count, 2)
+        XCTAssertEqual(isolated, [Bitboard(marked: C3), Bitboard(marked: H8)])
+    }
+    
+    func testBitboardThreeIsolatedPieces() {
+        
+        let H1 = Position(file: .H, rank: .one)
+        let G6 = Position(file: .G, rank: .six)
+        let A5 = Position(file: .A, rank: .five)
+        
+        var board = Bitboard()
+        board.mark(H1)
+        board.mark(G6)
+        board.mark(A5)
+        
+        let isolated = board.isolatedPieces()
+        let expectations = [
+            Bitboard(marked: H1),
+            Bitboard(marked: A5),
+            Bitboard(marked: G6)
+        ]
+        
+        XCTAssertEqual(isolated, expectations)
+    }
+    
+    func testD() {
+        //attacks right
+        var board = Bitboard(rawValue: 0b10000101)
+        board.mark(Position(file: .A, rank: .three))
+        print(board.ascii)
+        
+        let isolated = Bitboard(rawValue: 0b00000100)
+        let I2 = (isolated << 1)
+        let occupiens = (board | Bitboard.Masks.fileA).rawValue - I2.rawValue
+        let attack = (board ^ Bitboard(rawValue: occupiens)) & ~Bitboard.Masks.fileA
+        
+        print(isolated.ascii)
+        print(attack.ascii)
+        
+        let expected = Bitboard(rawValue: 0b11111000)
+        print(expected.ascii)
+        
+        XCTAssertEqual(attack, expected)
+    }
+    
+    func testFlipHorizontalFromAtoH() {
+        let board = Bitboard(rawValue: 0b1)
+        let expectation = Bitboard(rawValue: 0b1 << 7)
+        XCTAssertEqual(board.horizontalMirror(), expectation)
+    }
+    
+    func testFlipHorizontalFromABtoGH() {
+        let board = Bitboard(rawValue: 0b11)
+        let expectation = Bitboard(rawValue: 0b11 << 6)
+        XCTAssertEqual(board.horizontalMirror(), expectation)
+    }
+    
+    func testFlipHorizontalComplicated() {
+        let board = Bitboard(rawValue: 0x4222120E12224242)
+//        01000010
+//        01000100
+//        01001000
+//        01110000
+//        01001000
+//        01000100
+//        01000010
+//        01000010
+        
+        let expectation = Bitboard(rawValue: 0x4244487048444242)
+//        01000010
+//        00100010
+//        00010010
+//        00001110
+//        00010010
+//        00100010
+//        01000010
+//        01000010
+        
+        XCTAssertEqual(board.horizontalMirror(), expectation)
+    }
+    
+    func testFlipVerticalFromOneToEight() {
+        let board = Bitboard(rawValue: 0b1)
+        let expectation = Bitboard(marked: Position(file: .A, rank: .eight))
+        XCTAssertEqual(board.verticalMirror(), expectation)
+    }
+    
+    func testFlipVerticalFromOneTwoToSevenEight() {
+        var board = Bitboard(rawValue: 0b1)
+        board.mark(Position(file: .A, rank: .two))
+        var expectation = Bitboard(marked: Position(file: .A, rank: .eight))
+        expectation.mark(Position(file: .A, rank: .seven))
+        XCTAssertEqual(board.verticalMirror(), expectation)
+    }
+    
+    func testFlipVerticalComplicated() {
+        let board = Bitboard(rawValue: 0x4222120E12224242)
+//        01000010
+//        01000100
+//        01001000
+//        01110000
+//        01001000
+//        01000100
+//        01000010
+//        01000010
+                
+        let expectation = Bitboard(rawValue: 0x424222120E122242)
+//        01000010
+//        01000010
+//        01000100
+//        01001000
+//        01110000
+//        01001000
+//        01000100
+//        01000010
+        
+        XCTAssertEqual(board.verticalMirror(), expectation)
+    }
 }

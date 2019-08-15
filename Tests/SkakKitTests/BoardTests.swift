@@ -40,25 +40,25 @@ class BoardTests: XCTestCase {
     
     // - MARK: Place piece
     
-    func testPlacePieceOnEmptyPosition() {
-        let piece = Queen(color: .white)
-        board.place(piece: piece, at: Positions.empty)
-        
-        let placed = board.piece(at: Positions.empty)
-        XCTAssertNotNil(placed)
-        XCTAssertTrue(placed is Queen)
-        XCTAssertEqual(placed?.color, .white)
-    }
-    
-    func testPlacePieceOnOccupiedPosition() {
-        let piece = Queen(color: .white)
-        board.place(piece: piece, at: Positions.bPawn)
-        
-        let placed = board.piece(at: Positions.bPawn)
-        XCTAssertNotNil(placed)
-        XCTAssertTrue(placed is Queen)
-        XCTAssertEqual(placed?.color, .white)
-    }
+//    func testPlacePieceOnEmptyPosition() {
+//        let piece = Queen(color: .white)
+//        board.place(piece: piece, at: Positions.empty)
+//        
+//        let placed = board.piece(at: Positions.empty)
+//        XCTAssertNotNil(placed)
+//        XCTAssertTrue(placed is Queen)
+//        XCTAssertEqual(placed?.color, .white)
+//    }
+//    
+//    func testPlacePieceOnOccupiedPosition() {
+//        let piece = Queen(color: .white)
+//        board.place(piece: piece, at: Positions.bPawn)
+//        
+//        let placed = board.piece(at: Positions.bPawn)
+//        XCTAssertNotNil(placed)
+//        XCTAssertTrue(placed is Queen)
+//        XCTAssertEqual(placed?.color, .white)
+//    }
     
     // - MARK: Move pieces
     

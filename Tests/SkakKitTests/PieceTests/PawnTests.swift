@@ -10,7 +10,7 @@ import XCTest
 
 class PawnTests: XCTestCase {
     
-    let pawn = BBPawn()
+    let pawn = Pawn(color: .white)
     var board: Bitboard!
     
     override func setUp() {
