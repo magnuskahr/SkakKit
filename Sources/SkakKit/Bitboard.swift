@@ -41,7 +41,7 @@ public struct Bitboard: Equatable {
         self.rawValue = 1 << exponent
     }
     
-    init() {}
+    public init() {}
     
     /// Marks a position as occupied, will return wether it was successfull or not
     /// A possition can be marked if the representing value will be higher.
