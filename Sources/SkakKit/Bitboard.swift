@@ -12,7 +12,7 @@ struct BBIdentifier {
     let color: Color
 }
 
-struct Bitboard: Equatable {
+public struct Bitboard: Equatable {
     
     private(set) var rawValue: UInt64 = 0
     
