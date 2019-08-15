@@ -16,6 +16,7 @@ extension SlidingPiece {
         
         let occupiens = board & ~Bitboard(rawValue: isolated.rawValue * 2)
         let attack = board ^ occupiens
+        
         return attack
     }
 }
