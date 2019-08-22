@@ -96,23 +96,20 @@ public struct Bitboard: Equatable, Hashable {
             return [self]
         }
         
-        var bitboards = [Bitboard]()
-        var positionToCheck: UInt64 = 0
-        
-        #warning("rewrite to some better algorithm, maybe with SMID?")
-        while bitboards.count < pieceCount && positionToCheck < 64 {
-            let suggestion = Bitboard(rawValue: 1 << positionToCheck)
-            if self & suggestion > 0 {
-                bitboards.append(suggestion)
-            }
-            positionToCheck += 1
+        var isolatedBits = [UInt64]()
+
+        var searchable = self.rawValue
+        while searchable != 0 {
+            let isolated: UInt64 = 0b1 << (searchable.bitWidth - searchable.leadingZeroBitCount - 1)
+            searchable ^= isolated
+            isolatedBits.append(isolated)
         }
         
-        return bitboards
+        return isolatedBits.map { Bitboard(rawValue: $0) }
     }
     
     /// Based on the "The parallel prefix-algorithm" from https://www.chessprogramming.org/Flipping_Mirroring_and_Rotating#Horizontal
-    internal func horizontalMirror() -> Bitboard {
+    func horizontalMirror() -> Bitboard {
         var mirror = self
         
         let k1: Bitboard = 0x5555555555555555
@@ -126,8 +123,54 @@ public struct Bitboard: Equatable, Hashable {
         return mirror
     }
     
-    internal func verticalMirror() -> Bitboard {
+    func verticalMirror() -> Bitboard {
         return Bitboard(rawValue: rawValue.byteSwapped)
+    }
+    
+    func flipAntiDiagonal() -> Bitboard {
+        
+        var t = Bitboard()
+        var x = self
+        
+        let k1: Bitboard = 0xaa00aa00aa00aa00
+        let k2: Bitboard = 0xcccc0000cccc0000
+        let k4: Bitboard = 0xf0f0f0f00f0f0f0f
+        
+        t = x ^ (x << 36)
+        x = x ^ k4 & (t ^ (x >> 36))
+        t = k2 & (x ^ (x << 18))
+        x = x ^ t ^ (t >> 18)
+        t = k1 & (x ^ (x <<  9))
+        x = x ^ t ^ (t >>  9)
+        
+        return x
+    }
+    
+    func flipDiagonal() -> Bitboard {
+        
+        var t = Bitboard()
+        var x = self
+        
+        let k1: Bitboard = 0x5500550055005500
+        let k2: Bitboard = 0x3333000033330000
+        let k4: Bitboard = 0x0f0f0f0f00000000
+        
+        t = k4 & (x ^ (x << 28))
+        x = x ^ t ^ (t >> 28)
+        t = k2 & (x ^ (x << 14))
+        x = x ^ t ^ (t >> 14)
+        t = k1 & (x ^ (x <<  7))
+        x = x ^ t ^ (t >>  7)
+        
+        return x
+    }
+    
+    func turnedClockwise() -> Bitboard {
+        return flipDiagonal().verticalMirror()
+    }
+    
+    func turnedCounterClockwise() -> Bitboard {
+        return flipAntiDiagonal().verticalMirror()
     }
 }
 

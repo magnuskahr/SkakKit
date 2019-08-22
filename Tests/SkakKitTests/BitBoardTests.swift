@@ -215,9 +215,9 @@ class BitBoardTests: XCTestCase {
         board.mark(H8)
         board.mark(C3)
         
-        let isolated = board.isolatedPieces()
-        XCTAssertEqual(isolated.count, 2)
-        XCTAssertEqual(isolated, [Bitboard(marked: C3), Bitboard(marked: H8)])
+        let isolated = Set(board.isolatedPieces())
+        let expectation = Set([Bitboard(marked: C3), Bitboard(marked: H8)])
+        XCTAssertEqual(isolated, expectation)
     }
     
     func testBitboardThreeIsolatedPieces() {
@@ -231,12 +231,12 @@ class BitBoardTests: XCTestCase {
         board.mark(G6)
         board.mark(A5)
         
-        let isolated = board.isolatedPieces()
-        let expectations = [
-            Bitboard(marked: H1),
+        let isolated = Set(board.isolatedPieces())
+        let expectations = Set([
+            Bitboard(marked: G6),
             Bitboard(marked: A5),
-            Bitboard(marked: G6)
-        ]
+            Bitboard(marked: H1)
+        ])
         
         XCTAssertEqual(isolated, expectations)
     }
@@ -252,6 +252,7 @@ class BitBoardTests: XCTestCase {
         let occupiens = (board | Bitboard.Masks.fileA).rawValue - I2.rawValue
         let attack = (board ^ Bitboard(rawValue: occupiens)) & ~Bitboard.Masks.fileA
         
+        print(Bitboard(rawValue: occupiens).ascii)
         print(isolated.ascii)
         print(attack.ascii)
         
@@ -261,19 +262,19 @@ class BitBoardTests: XCTestCase {
         XCTAssertEqual(attack, expected)
     }
     
-    func testFlipHorizontalFromAtoH() {
+    func testMirrorHorizontalFromAtoH() {
         let board = Bitboard(rawValue: 0b1)
         let expectation = Bitboard(rawValue: 0b1 << 7)
         XCTAssertEqual(board.horizontalMirror(), expectation)
     }
     
-    func testFlipHorizontalFromABtoGH() {
+    func testMirrorHorizontalFromABtoGH() {
         let board = Bitboard(rawValue: 0b11)
         let expectation = Bitboard(rawValue: 0b11 << 6)
         XCTAssertEqual(board.horizontalMirror(), expectation)
     }
     
-    func testFlipHorizontalComplicated() {
+    func testMirrorHorizontalComplicated() {
         let board = Bitboard(rawValue: 0x4222120E12224242)
 //        01000010
 //        01000100
@@ -297,13 +298,13 @@ class BitBoardTests: XCTestCase {
         XCTAssertEqual(board.horizontalMirror(), expectation)
     }
     
-    func testFlipVerticalFromOneToEight() {
+    func testMirrorVerticalFromOneToEight() {
         let board = Bitboard(rawValue: 0b1)
         let expectation = Bitboard(marked: Position(file: .A, rank: .eight))
         XCTAssertEqual(board.verticalMirror(), expectation)
     }
     
-    func testFlipVerticalFromOneTwoToSevenEight() {
+    func testMirrorVerticalFromOneTwoToSevenEight() {
         var board = Bitboard(rawValue: 0b1)
         board.mark(Position(file: .A, rank: .two))
         var expectation = Bitboard(marked: Position(file: .A, rank: .eight))
@@ -311,7 +312,7 @@ class BitBoardTests: XCTestCase {
         XCTAssertEqual(board.verticalMirror(), expectation)
     }
     
-    func testFlipVerticalComplicated() {
+    func testMirrorVerticalComplicated() {
         let board = Bitboard(rawValue: 0x4222120E12224242)
 //        01000010
 //        01000100
@@ -333,5 +334,42 @@ class BitBoardTests: XCTestCase {
 //        01000010
         
         XCTAssertEqual(board.verticalMirror(), expectation)
+    }
+    
+    func testDiagonAttack() {
+        let masks = Bitboard(rawValue: 0x2010884422110804)
+        let board = Bitboard(rawValue: 0x2000880000110004)
+        let attackers = Bitboard(rawValue: 0x80000100000)
+        
+        let upto = attackers << 1
+        let overflowProtectedBoard = board & masks
+        let gapfilled = overflowProtectedBoard.rawValue - upto.rawValue
+        let attack = (board ^ Bitboard(rawValue: gapfilled)) & masks
+        
+        print(attack.ascii)
+    }
+    
+    func testFlipAntiDiagonal() {
+        let base = Bitboard(rawValue: 0x50A150A15)
+        let flipped = base.flipAntiDiagonal()
+        let expected = Bitboard(rawValue: 0xA850A850A0000000)
+        XCTAssertEqual(flipped, expected)
+    }
+    
+    func testRotateCounterClockwise() {
+        let base = Bitboard(rawValue: 0x1)
+        let flipped = base.turnedCounterClockwise()
+        let expected = Bitboard(rawValue: 0x80)
+        XCTAssertEqual(flipped, expected)
+    }
+    
+    func testRotateClockwise() {
+        let base = Bitboard(rawValue: 0x1)
+        let flipped = base.turnedClockwise()
+        let expected = Bitboard(rawValue: 0x100000000000000)
+        XCTAssertEqual(flipped, expected)
+        
+        let d = Bitboard(rawValue: 0x5500550055005500)
+        print(d.ascii)
     }
 }
