@@ -9,8 +9,8 @@ import Foundation
 
 struct Rook: SlidingPiece {
     
-    var representation = "r"
-    var color: Color
+    let representation = "r"
+    let color: Color
     
     func attacks(on board: Bitboard, with color: Color) -> Bitboard {
         return 0

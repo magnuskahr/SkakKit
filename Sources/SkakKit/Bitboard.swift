@@ -43,6 +43,16 @@ public struct Bitboard: Equatable, Hashable {
     
     public init() {}
     
+    
+    /// Tests a position of being occupied
+    /// - Parameter position: Position to test for
+    /// - Returns: bool indicating being occupied or not
+    public func occupied(at position: Position) -> Bool {
+        let markedPosition = Bitboard(marked: position)
+        let isolated = markedPosition & self
+        return !isolated.isEmpty
+    }
+    
     /// Marks a position as occupied, will return wether it was successfull or not
     /// A possition can be marked if the representing value will be higher.
     /// - Parameter file: the file to mark
@@ -109,7 +119,7 @@ public struct Bitboard: Equatable, Hashable {
     }
     
     /// Based on the "The parallel prefix-algorithm" from https://www.chessprogramming.org/Flipping_Mirroring_and_Rotating#Horizontal
-    func horizontalMirror() -> Bitboard {
+    func horizontalMirrored() -> Bitboard {
         var mirror = self
         
         let k1: Bitboard = 0x5555555555555555
@@ -123,7 +133,7 @@ public struct Bitboard: Equatable, Hashable {
         return mirror
     }
     
-    func verticalMirror() -> Bitboard {
+    func verticalMirrored() -> Bitboard {
         return Bitboard(rawValue: rawValue.byteSwapped)
     }
     
@@ -166,11 +176,11 @@ public struct Bitboard: Equatable, Hashable {
     }
     
     func turnedClockwise() -> Bitboard {
-        return flipDiagonal().verticalMirror()
+        return flipDiagonal().verticalMirrored()
     }
     
     func turnedCounterClockwise() -> Bitboard {
-        return flipAntiDiagonal().verticalMirror()
+        return flipAntiDiagonal().verticalMirrored()
     }
 }
 

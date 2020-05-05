@@ -27,17 +27,18 @@ struct Game {
             return .failure(.illegal)
         }
         
+        
 //        guard piece.allows(move: move, on: board) else {
 //            return .failure(.illegal)
 //        }
         
-//        if let promotable = piece as? Promoteable,
-//            shouldPromote(candidate: piece, on: move.to),
-//            let promoter = promoter {
-//
-//            let promotions = promotable.promotions()
-//            let promotion = promoter.choose(between: promotions)
-//        }
+        if let promotable = piece as? Promoteable,
+            shouldPromote(candidate: piece, on: move.to),
+            let promoter = promoter {
+
+            let promotions = promotable.promotions
+            let promotion = promoter.choose(between: promotions)
+        }
         
         return .success(())
     }

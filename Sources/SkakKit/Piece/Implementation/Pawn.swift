@@ -9,8 +9,8 @@ import Foundation
 
 struct Pawn: Piece {
     
-    var representation = "p"
-    var color: Color
+    let representation = "p"
+    let color: Color
     
     func attacks(on board: Bitboard, with color: Color) -> Bitboard {
         switch color {
@@ -33,4 +33,10 @@ struct Pawn: Piece {
         return leftAttack | rightAttack
     }
     
+}
+
+extension Pawn: Promoteable {
+    var promotions: [Piece] {
+        []
+    }
 }

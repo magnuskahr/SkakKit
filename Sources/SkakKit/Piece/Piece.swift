@@ -10,11 +10,14 @@ protocol Piece {
     var representation: String { get }
     var color: Color { get }
     
-    func attacks(on board: Bitboard,  with color: Color) -> Bitboard
+    func attacks(on board: Bitboard, with color: Color) -> Bitboard
 }
 
 extension Piece  {
-    var description: String {
+    
+    typealias Identifier = String
+    
+    var identifier: Identifier {
         get {
             switch color {
             case .black: return representation.lowercased()

@@ -9,8 +9,8 @@ import Foundation
 
 struct Knight: Piece {
     
-    var representation = "n"
-    var color: Color
+    let representation = "n"
+    let color: Color
     
     
     /// We denote the attacks by the knight as following:

@@ -8,5 +8,5 @@
 import Foundation
 
 protocol Promoteable {
-    func promotions() -> [Piece]
+    var promotions: [Piece] { get }
 }

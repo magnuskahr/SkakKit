@@ -14,7 +14,10 @@ class BoardTests: XCTestCase {
     var board: Board!
     
     override func setUp() {
-        board = Board(with: builder)
+        board = Board()
+        
+        let wpawn = Pawn(color: .white)
+        board.place(piece: wpawn, at: Positions.wPawn)
     }
     
     // - MARK: Get pieces
@@ -96,7 +99,7 @@ class BoardTests: XCTestCase {
 
 // - MARK: Stubs
 struct Positions {
-    static let wPawn = Position(file: .A, rank: .one)
+    static let wPawn = Position(file: .A, rank: .two)
     static let bPawn = Position(file: .B, rank: .two)
     static let empty = Position(file: .B, rank: .one)
 }

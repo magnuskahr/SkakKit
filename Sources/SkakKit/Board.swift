@@ -7,14 +7,27 @@
 
 import Foundation
 
+struct IdentifiedPiece: Hashable {
+    
+    let piece: Piece
+    
+    static func == (lhs: IdentifiedPiece, rhs: IdentifiedPiece) -> Bool {
+        lhs.piece.identifier == rhs.piece.identifier
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(piece.color)
+        hasher.combine(piece.representation)
+    }
+    
+}
+
 /// A board is a representation  of a game state, i does not contain any game logic and should be used visely
 struct Board {
     
-    private var pieces: [Position: Piece]
-    
-    init(with builder: BoardBuilder = StandartBoardBuilder()) {
-        pieces = builder.construct()
-    }
+    private var bitboards: [IdentifiedPiece: Bitboard] = [
+        IdentifiedPiece(piece: Pawn(color: .white)) : 0xFF00
+    ]
     
     mutating func perform(move: Move) -> Bool {
         
@@ -29,15 +42,22 @@ struct Board {
     }
     
     func piece(at position: Position) -> Piece? {
-        return pieces[position]
+        bitboards.filter {
+            $0.value.occupied(at: position)
+        }
+        .map(\.key.piece)
+        .first
     }
     
     internal mutating func clear(at position: Position) {
-        pieces[position] = nil
+        for key in bitboards.keys {
+            bitboards[key]?.clear(position)
+        }
     }
     
     internal mutating func place(piece: Piece, at position: Position) {
-        pieces[position] = piece
+        let key = IdentifiedPiece(piece: piece)
+        bitboards[key]?.mark(position)
     }
     
 }

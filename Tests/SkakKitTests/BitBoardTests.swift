@@ -265,13 +265,13 @@ class BitBoardTests: XCTestCase {
     func testMirrorHorizontalFromAtoH() {
         let board = Bitboard(rawValue: 0b1)
         let expectation = Bitboard(rawValue: 0b1 << 7)
-        XCTAssertEqual(board.horizontalMirror(), expectation)
+        XCTAssertEqual(board.horizontalMirrored(), expectation)
     }
     
     func testMirrorHorizontalFromABtoGH() {
         let board = Bitboard(rawValue: 0b11)
         let expectation = Bitboard(rawValue: 0b11 << 6)
-        XCTAssertEqual(board.horizontalMirror(), expectation)
+        XCTAssertEqual(board.horizontalMirrored(), expectation)
     }
     
     func testMirrorHorizontalComplicated() {
@@ -295,13 +295,13 @@ class BitBoardTests: XCTestCase {
 //        01000010
 //        01000010
         
-        XCTAssertEqual(board.horizontalMirror(), expectation)
+        XCTAssertEqual(board.horizontalMirrored(), expectation)
     }
     
     func testMirrorVerticalFromOneToEight() {
         let board = Bitboard(rawValue: 0b1)
         let expectation = Bitboard(marked: Position(file: .A, rank: .eight))
-        XCTAssertEqual(board.verticalMirror(), expectation)
+        XCTAssertEqual(board.verticalMirrored(), expectation)
     }
     
     func testMirrorVerticalFromOneTwoToSevenEight() {
@@ -309,7 +309,7 @@ class BitBoardTests: XCTestCase {
         board.mark(Position(file: .A, rank: .two))
         var expectation = Bitboard(marked: Position(file: .A, rank: .eight))
         expectation.mark(Position(file: .A, rank: .seven))
-        XCTAssertEqual(board.verticalMirror(), expectation)
+        XCTAssertEqual(board.verticalMirrored(), expectation)
     }
     
     func testMirrorVerticalComplicated() {
@@ -333,7 +333,7 @@ class BitBoardTests: XCTestCase {
 //        01000100
 //        01000010
         
-        XCTAssertEqual(board.verticalMirror(), expectation)
+        XCTAssertEqual(board.verticalMirrored(), expectation)
     }
     
     func testDiagonAttack() {

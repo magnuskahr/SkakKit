@@ -9,9 +9,8 @@ import Foundation
 
 struct King: Piece {
     
-    var representation = "k"
-    var color: Color
-    
+    let representation = "k"
+    let color: Color
     
     /// We denote the attacks by the king as following:
     /// 1   2   3
@@ -19,7 +18,6 @@ struct King: Piece {
     /// 7   6   5
     
     func attacks(on board: Bitboard, with color: Color) -> Bitboard {
-        
         return 0
     }
     
