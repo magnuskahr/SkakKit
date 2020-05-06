@@ -10,7 +10,7 @@ import Foundation
 /// A board is a representation  of a game state, it does not contain any game logic and should be used visely
 struct Board {
     
-    private var bitboards: [Piece: Bitboard] = [
+    private(set) var bitboards: [Piece: Bitboard] = [
         .whitePawn: 0xFF00,
         .blackPawn: 0xFF000000000000,
         
@@ -43,11 +43,10 @@ struct Board {
     }
     
     func piece(at position: Position) -> Piece? {
-        bitboards.filter {
+        bitboards.first {
             $0.value.occupied(at: position)
         }
         .map(\.key)
-        .first
     }
     
     internal mutating func clear(at position: Position) {
@@ -56,6 +55,14 @@ struct Board {
         }
     }
     
+    /// Places the piece at the position
+    ///
+    /// Marks the bitboard, representing to the piece, at the given position at being occupied.
+    /// This will not clear other bitboards of this position, and should therefor be used visely
+    ///
+    /// - Parameters:
+    ///   - piece: piece to be placed
+    ///   - position: position to place
     internal mutating func place(piece: Piece, at position: Position) {
         bitboards[piece]?.mark(position)
     }
@@ -67,10 +74,9 @@ struct Board {
     }
     
     internal mutating func key(of identifier: PieceIdentifier, as color: Color) -> Piece? {
-        bitboards.keys.filter {
+        bitboards.keys.first {
             $0.identifier == identifier && $0.color == color
         }
-        .first
     }
     
     var ascii: String {

@@ -43,25 +43,26 @@ class BoardTests: XCTestCase {
     
     // - MARK: Place piece
     
-//    func testPlacePieceOnEmptyPosition() {
-//        let piece = Queen(color: .white)
-//        board.place(piece: piece, at: Positions.empty)
-//        
-//        let placed = board.piece(at: Positions.empty)
-//        XCTAssertNotNil(placed)
-//        XCTAssertTrue(placed is Queen)
-//        XCTAssertEqual(placed?.color, .white)
-//    }
-//    
-//    func testPlacePieceOnOccupiedPosition() {
-//        let piece = Queen(color: .white)
-//        board.place(piece: piece, at: Positions.bPawn)
-//        
-//        let placed = board.piece(at: Positions.bPawn)
-//        XCTAssertNotNil(placed)
-//        XCTAssertTrue(placed is Queen)
-//        XCTAssertEqual(placed?.color, .white)
-//    }
+    func testPlacePieceOnEmptyPosition() {
+        let piece = Piece.whiteQueen
+        board.place(piece: piece, at: Positions.empty)
+        
+        let placed = board.piece(at: Positions.empty)
+        XCTAssertNotNil(placed)
+        XCTAssertEqual(placed?.identifier, .queen)
+        XCTAssertEqual(placed?.color, .white)
+    }
+    
+    func testPlacePieceOnOccupiedPositionDoesNotClearIt() {
+        let piece = Piece.whiteQueen
+        board.place(piece: piece, at: Positions.bPawn)
+        
+        let amountPlacedOnBoards = board.bitboards
+            .filter { $0.value.occupied(at: Positions.bPawn) }
+            .count
+        
+        XCTAssertEqual(amountPlacedOnBoards, 2)
+    }
     
     // - MARK: Move pieces
     
@@ -86,8 +87,6 @@ class BoardTests: XCTestCase {
         XCTAssertNotNil(piece)
         XCTAssertEqual(piece?.identifier, .pawn)
         XCTAssertEqual(piece?.color, .white)
-        
-        print(board.ascii)
     }
     
     func testMoveOverwritesPiece() {
@@ -95,7 +94,7 @@ class BoardTests: XCTestCase {
         let _ = board.perform(move: move)
         let piece = board.piece(at: Positions.bPawn)
         XCTAssertNotNil(piece)
-        XCTAssertTrue(piece is PawnMechanics)
+        XCTAssertEqual(piece?.identifier, .pawn)
         XCTAssertEqual(piece?.color, .white)
     }
 }

@@ -7,11 +7,6 @@
 
 import Foundation
 
-struct BBIdentifier {
-    let piece: Piece
-    let color: Color
-}
-
 public struct Bitboard: Equatable, Hashable {
     
     private(set) var rawValue: UInt64 = 0
