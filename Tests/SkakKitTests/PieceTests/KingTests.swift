@@ -10,7 +10,7 @@ import XCTest
 
 class KingTests: XCTestCase {
     
-    let king = King(color: .white)
+    let king = KingMechanics()
     var board: Bitboard!
     
     override func setUp() {

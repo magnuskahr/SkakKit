@@ -7,26 +7,27 @@
 
 import Foundation
 
-struct IdentifiedPiece: Hashable {
-    
-    let piece: Piece
-    
-    static func == (lhs: IdentifiedPiece, rhs: IdentifiedPiece) -> Bool {
-        lhs.piece.identifier == rhs.piece.identifier
-    }
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(piece.color)
-        hasher.combine(piece.representation)
-    }
-    
-}
-
-/// A board is a representation  of a game state, i does not contain any game logic and should be used visely
+/// A board is a representation  of a game state, it does not contain any game logic and should be used visely
 struct Board {
     
-    private var bitboards: [IdentifiedPiece: Bitboard] = [
-        IdentifiedPiece(piece: Pawn(color: .white)) : 0xFF00
+    private var bitboards: [Piece: Bitboard] = [
+        .whitePawn: 0xFF00,
+        .blackPawn: 0xFF000000000000,
+        
+        .whiteRook: 0x81,
+        .blackRook: 0x8100000000000000,
+        
+        .whiteKnight: 0x42,
+        .blackKnight: 0x4200000000000000,
+        
+        .whiteBishop: 0x24,
+        .blackBishop: 0x2400000000000000,
+        
+        .whiteQueen: 0x10,
+        .blackQueen: 0x1000000000000000,
+        
+        .whiteKing: 0x8,
+        .blackKing: 0x800000000000000
     ]
     
     mutating func perform(move: Move) -> Bool {
@@ -45,7 +46,7 @@ struct Board {
         bitboards.filter {
             $0.value.occupied(at: position)
         }
-        .map(\.key.piece)
+        .map(\.key)
         .first
     }
     
@@ -56,8 +57,39 @@ struct Board {
     }
     
     internal mutating func place(piece: Piece, at position: Position) {
-        let key = IdentifiedPiece(piece: piece)
-        bitboards[key]?.mark(position)
+        bitboards[piece]?.mark(position)
+    }
+    
+    internal mutating func place(piece: PieceIdentifier, as color: Color, at position: Position) {
+        if let key = key(of: piece, as: color) {
+            place(piece: key, at: position)
+        }
+    }
+    
+    internal mutating func key(of identifier: PieceIdentifier, as color: Color) -> Piece? {
+        bitboards.keys.filter {
+            $0.identifier == identifier && $0.color == color
+        }
+        .first
+    }
+    
+    var ascii: String {
+        var board = String()
+        
+        for rank in Rank.allCases.reversed() {
+            for file in File.allCases {
+                let position = Position(file: file, rank: rank)
+                let representation = bitboards
+                    .filter { $0.value.occupied(at: position) }
+                    .map(\.key.representation)
+                    .first ?? " "
+                
+                board += representation
+            }
+            board += "\n"
+        }
+        
+        return board
     }
     
 }

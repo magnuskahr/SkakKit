@@ -7,17 +7,14 @@
 
 import Foundation
 
-struct King: Piece {
-    
-    let representation = "k"
-    let color: Color
+struct KingMechanics: PieceMechanics {
     
     /// We denote the attacks by the king as following:
     /// 1   2   3
     /// 8   K   4
     /// 7   6   5
     
-    func attacks(on board: Bitboard, with color: Color) -> Bitboard {
+    func attacks(on board: Bitboard, as color: Color) -> Bitboard {
         return 0
     }
     

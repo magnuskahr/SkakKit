@@ -37,7 +37,7 @@ struct Game {
             let promoter = promoter {
 
             let promotions = promotable.promotions
-            let promotion = promoter.choose(between: promotions)
+//            let promotion = promoter.choose(between: promotions)
         }
         
         return .success(())

@@ -7,11 +7,7 @@
 
 import Foundation
 
-struct Knight: Piece {
-    
-    let representation = "n"
-    let color: Color
-    
+struct KnightMechanics: PieceMechanics {
     
     /// We denote the attacks by the knight as following:
     ///    2       3
@@ -20,8 +16,7 @@ struct Knight: Piece {
     ///  8                5
     ///    7       6
     
-    
-    func attacks(on board: Bitboard, with color: Color) -> Bitboard {
+    func attacks(on board: Bitboard, as color: Color) -> Bitboard {
         
         let maskAB = Bitboard.Masks.fileA | Bitboard.Masks.fileB
         let maskGH = Bitboard.Masks.fileG | Bitboard.Masks.fileH

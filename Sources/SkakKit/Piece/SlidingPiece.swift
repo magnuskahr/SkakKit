@@ -5,9 +5,9 @@
 //  Created by Magnus Jensen on 11/08/2019.
 //
 
-protocol SlidingPiece: Piece { }
+protocol SlidingPieceMechanics: PieceMechanics { }
 
-extension SlidingPiece {
+extension SlidingPieceMechanics {
     /// Returns a bitboard with the possible slidings to the right from a isolated bitboard. If the provided isolation does not represent a isolated piece, nil will be returned.
     func rightSlidings(on board: Bitboard, from isolated: Bitboard) -> Bitboard? {
         guard isolated.pieceCount == 1 else {

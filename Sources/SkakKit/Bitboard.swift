@@ -81,7 +81,7 @@ public struct Bitboard: Equatable, Hashable {
     }
     
     func attacks(as piece: Piece, colored color: Color) -> Bitboard {
-        return piece.attacks(on: self, with: color)
+        return piece.attacks(on: self, as: color)
     }
     
     /// Returns the number of pieces this bitboard represents
