@@ -368,8 +368,26 @@ class BitBoardTests: XCTestCase {
         let flipped = base.turnedClockwise()
         let expected = Bitboard(rawValue: 0x100000000000000)
         XCTAssertEqual(flipped, expected)
+    }
+    
+    func testIsOccupied() {
+        let position = Position(file: .A, rank: .one)
+        let base = Bitboard(marked: position)
+        XCTAssertTrue(base.occupied(at: position))
+    }
+    
+    func testIsNotOccupied() {
+        let occupied = Position(file: .A, rank: .one)
+        let base = Bitboard(marked: occupied)
         
-        let d = Bitboard(rawValue: 0x5500550055005500)
-        print(d.ascii)
+        let empty = Position(file: .H, rank: .eight)
+        XCTAssertFalse(base.occupied(at: empty))
+    }
+    
+    func testIsNotOccupiedOnEmptyBoard() {
+        let base = Bitboard()
+        
+        let empty = Position(file: .H, rank: .eight)
+        XCTAssertFalse(base.occupied(at: empty))
     }
 }
