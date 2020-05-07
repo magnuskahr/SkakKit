@@ -56,7 +56,7 @@ extension SlidingPieceMechanics {
     func rankAttacks(occupied: Bitboard, attackers: Bitboard) -> Bitboard {
         let left = hyperbola(occupied: occupied, attackers: attackers)
         
-        // Hyperbola works only to the left, so we use horizontal mirrored boards
+        // Hyperbola works only to the left in the binary sequence (right on the board), so we use horizontal mirrored boards
         let right = hyperbola(
             occupied: occupied.horizontalMirrored(),
             attackers: attackers.horizontalMirrored())
@@ -75,7 +75,7 @@ extension SlidingPieceMechanics {
     }
     
     /// Hyperbola Quintessence
-    /// Returns bitboard with reachable + attacking squares to the left by sliding
+    /// Returns bitboard with reachable + attacking squares to the left of the binary sequence (but right on the board) by sliding
     ///
     /// Based on https://www.chessprogramming.org/Hyperbola_Quintessence#Generalized_Set-wise_Attacks
     ///
@@ -84,11 +84,26 @@ extension SlidingPieceMechanics {
     ///   - attackers: the board to find attacking squares of
     /// - Returns: A bitboard with reachable squares to the left of the attackers limited by the occupiers
     func hyperbola(occupied: Bitboard, attackers: Bitboard) -> Bitboard {
-        let mask = Bitboard.Masks.fileA
-        let upto = attackers << 1
-        let overflowProtectedBoard = occupied | mask
-        let gapfilled = overflowProtectedBoard.rawValue - upto.rawValue
-        let attack = (occupied ^ Bitboard(rawValue: gapfilled)) & ~mask
+        let mask: Bitboard = Bitboard.Masks.fileA
+
+        let overflowProtectedOccupiers = occupied | mask
+        let upto = attackers << 1 // attackers * 2
+
+        let gapFilled: Bitboard = {
+            if upto > overflowProtectedOccupiers {
+                let H8 = Bitboard(marked: Position(file: .H, rank: .eight))
+                let maxOverflowProtection = overflowProtectedOccupiers | H8
+                let gap = Bitboard(rawValue: maxOverflowProtection.rawValue - upto.rawValue)
+                return gap | H8
+            } else {
+                return Bitboard(rawValue: overflowProtectedOccupiers.rawValue - upto.rawValue)
+            }
+        }()
+        
+        // (o ^ ((o | right) - 2*r) & ~right
+        // (r = rooks, o = occupied)
+        
+        let attack = (occupied ^ gapFilled) & ~mask
         return attack
     }
 }

@@ -252,7 +252,7 @@ extension Bitboard {
 extension Bitboard: CustomStringConvertible {
     
     public var description: String {
-        return rawValue.words.reduce(into: "") {
+        rawValue.words.reduce(into: "") {
             $0.append(contentsOf: repeatElement("0", count: $1.leadingZeroBitCount))
             if $1 != 0 {
                 $0.append(String($1, radix: 2))
