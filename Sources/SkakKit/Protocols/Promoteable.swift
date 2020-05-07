@@ -8,5 +8,5 @@
 import Foundation
 
 protocol Promoteable {
-    var promotions: [Piece] { get }
+    var promotions: [PieceIdentifier] { get }
 }

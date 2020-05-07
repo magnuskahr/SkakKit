@@ -7,12 +7,9 @@
 
 import Foundation
 
-struct Pawn: Piece {
+struct PawnMechanics: PieceMechanics {
     
-    let representation = "p"
-    let color: Color
-    
-    func attacks(on board: Bitboard, with color: Color) -> Bitboard {
+    func attacks(on board: Bitboard, as color: Color) -> Bitboard {
         switch color {
         case .black: return attacksDown(on: board)
         case .white: return attacksUp(on: board)
@@ -35,8 +32,8 @@ struct Pawn: Piece {
     
 }
 
-extension Pawn: Promoteable {
-    var promotions: [Piece] {
-        []
+extension PawnMechanics: Promoteable {
+    var promotions: [PieceIdentifier] {
+        [.rook, .bishop, .knight, .queen]
     }
 }

@@ -7,11 +7,6 @@
 
 import Foundation
 
-struct BBIdentifier {
-    let piece: Piece
-    let color: Color
-}
-
 public struct Bitboard: Equatable, Hashable {
     
     private(set) var rawValue: UInt64 = 0
@@ -81,7 +76,7 @@ public struct Bitboard: Equatable, Hashable {
     }
     
     func attacks(as piece: Piece, colored color: Color) -> Bitboard {
-        return piece.attacks(on: self, with: color)
+        return piece.attacks(on: self, as: color)
     }
     
     /// Returns the number of pieces this bitboard represents
@@ -257,7 +252,7 @@ extension Bitboard {
 extension Bitboard: CustomStringConvertible {
     
     public var description: String {
-        return rawValue.words.reduce(into: "") {
+        rawValue.words.reduce(into: "") {
             $0.append(contentsOf: repeatElement("0", count: $1.leadingZeroBitCount))
             if $1 != 0 {
                 $0.append(String($1, radix: 2))

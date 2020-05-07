@@ -10,7 +10,7 @@ import XCTest
 
 class PawnTests: XCTestCase {
     
-    let pawn = Pawn(color: .white)
+    let pawn = PawnMechanics()
     var board: Bitboard!
     
     override func setUp() {
@@ -80,13 +80,13 @@ class PawnTests: XCTestCase {
     
     func testWhiteAttacksUp() {
         board.mark(Position(file: .C, rank: .one))
-        let attacks = pawn.attacks(on: board, with: .white)
+        let attacks = pawn.attacks(on: board, as: .white)
         XCTAssertEqual(attacks, 0b1010_00000000)
     }
     
     func testBlackAttacksDown() {
         board.mark(Position(file: .C, rank: .eight))
-        let attacks = pawn.attacks(on: board, with: .black)
+        let attacks = pawn.attacks(on: board, as: .black)
         
         var expected = Bitboard()
         expected.mark(Position(file: .B, rank: .seven))

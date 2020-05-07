@@ -16,7 +16,7 @@ class BoardTests: XCTestCase {
     override func setUp() {
         board = Board()
         
-        let wpawn = Pawn(color: .white)
+        let wpawn = Piece.whitePawn
         board.place(piece: wpawn, at: Positions.wPawn)
     }
     
@@ -25,7 +25,7 @@ class BoardTests: XCTestCase {
     func testGetsPieceAtPosition() {
         let piece = board.piece(at: Positions.wPawn)!
         XCTAssertEqual(piece.color, .white)
-        XCTAssertTrue(piece is Pawn)
+        XCTAssertEqual(piece.identifier, .pawn)
     }
     
     func testGetsNoPieceAtEmptyPosition() {
@@ -43,25 +43,26 @@ class BoardTests: XCTestCase {
     
     // - MARK: Place piece
     
-//    func testPlacePieceOnEmptyPosition() {
-//        let piece = Queen(color: .white)
-//        board.place(piece: piece, at: Positions.empty)
-//        
-//        let placed = board.piece(at: Positions.empty)
-//        XCTAssertNotNil(placed)
-//        XCTAssertTrue(placed is Queen)
-//        XCTAssertEqual(placed?.color, .white)
-//    }
-//    
-//    func testPlacePieceOnOccupiedPosition() {
-//        let piece = Queen(color: .white)
-//        board.place(piece: piece, at: Positions.bPawn)
-//        
-//        let placed = board.piece(at: Positions.bPawn)
-//        XCTAssertNotNil(placed)
-//        XCTAssertTrue(placed is Queen)
-//        XCTAssertEqual(placed?.color, .white)
-//    }
+    func testPlacePieceOnEmptyPosition() {
+        let piece = Piece.whiteQueen
+        board.place(piece: piece, at: Positions.empty)
+        
+        let placed = board.piece(at: Positions.empty)
+        XCTAssertNotNil(placed)
+        XCTAssertEqual(placed?.identifier, .queen)
+        XCTAssertEqual(placed?.color, .white)
+    }
+    
+    func testPlacePieceOnOccupiedPositionDoesNotClearIt() {
+        let piece = Piece.whiteQueen
+        board.place(piece: piece, at: Positions.bPawn)
+        
+        let amountPlacedOnBoards = board.bitboards
+            .filter { $0.value.occupied(at: Positions.bPawn) }
+            .count
+        
+        XCTAssertEqual(amountPlacedOnBoards, 2)
+    }
     
     // - MARK: Move pieces
     
@@ -81,9 +82,10 @@ class BoardTests: XCTestCase {
     func testMovesPiece() {
         let move = Move(from: Positions.wPawn, to: Positions.empty)
         let _ = board.perform(move: move)
+        
         let piece = board.piece(at: Positions.empty)
         XCTAssertNotNil(piece)
-        XCTAssertTrue(piece is Pawn)
+        XCTAssertEqual(piece?.identifier, .pawn)
         XCTAssertEqual(piece?.color, .white)
     }
     
@@ -92,7 +94,7 @@ class BoardTests: XCTestCase {
         let _ = board.perform(move: move)
         let piece = board.piece(at: Positions.bPawn)
         XCTAssertNotNil(piece)
-        XCTAssertTrue(piece is Pawn)
+        XCTAssertEqual(piece?.identifier, .pawn)
         XCTAssertEqual(piece?.color, .white)
     }
 }
@@ -101,14 +103,14 @@ class BoardTests: XCTestCase {
 struct Positions {
     static let wPawn = Position(file: .A, rank: .two)
     static let bPawn = Position(file: .B, rank: .two)
-    static let empty = Position(file: .B, rank: .one)
+    static let empty = Position(file: .B, rank: .three)
 }
 
 struct BoardBuilderStub: BoardBuilder {
     func construct() -> [Position : Piece] {
         return [
-            Positions.wPawn: Pawn(color: .white),
-            Positions.bPawn: Pawn(color: .black)
+            Positions.wPawn: Piece.whitePawn,
+            Positions.bPawn: Piece.whitePawn
         ]
     }
 }
