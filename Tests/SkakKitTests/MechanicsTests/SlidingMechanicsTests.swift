@@ -37,6 +37,16 @@ class SlidingMechanicsTests: XCTestCase {
         XCTAssertEqual(attacks, expectedAttacks)
     }
     
+    func testWholeFileAttacksAllRanks() {
+        let attackers: Bitboard = 0x1010101010101010
+        let attacks = stub.rankAttacks(occupied: empty, attackers: attackers)
+        
+        let expected: Bitboard = 0xEFEFEFEFEFEFEFEF
+        XCTAssertEqual(attacks, expected)
+    }
+ 
+    // MARK: - hyperbola tests
+    
     func testHyperbolaAtEightRankMidFile() {
         let attacker: Bitboard = 0x1000000000000000
         let attacks = stub.hyperbola(occupied: empty, attackers: attacker)
@@ -121,16 +131,6 @@ class SlidingMechanicsTests: XCTestCase {
         XCTAssertEqual(attacks, expected)
     }
     
-    func testWholeFileAttacksAllRanks() {
-        let attackers: Bitboard = 0x1010101010101010
-        let attacks = stub.rankAttacks(occupied: empty, attackers: attackers)
-        
-        let expected: Bitboard = 0xEFEFEFEFEFEFEFEF
-        XCTAssertEqual(attacks, expected)
-    }
-    
-    func testOccupiersContainingAttackersDoesntMatter() {}
-    
     func testHyperbolaWithOccupier() {
         let attackers: Bitboard = 0x10 // 00001000
         let defender: Bitboard = 0x50  // 00001010
@@ -199,6 +199,17 @@ class SlidingMechanicsTests: XCTestCase {
         let expectation: Bitboard = 0xCC // 00110011
         
         XCTAssertEqual(attacks, expectation)
+    }
+    
+    func testOccupiersContainingAttackersDoesntMatter() {
+        let attackers: Bitboard = 0x22  // 01000100
+        let occupiers: Bitboard = 0x2A  // 01010100
+        let defender: Bitboard = 0x8    // 00010000
+        
+        let attacksWithOccupiers = stub.hyperbola(occupied: occupiers, attackers: attackers)
+        let attacksWithDefender = stub.hyperbola(occupied: defender, attackers: attackers)
+        
+        XCTAssertEqual(attacksWithOccupiers, attacksWithDefender)
     }
 }
 
