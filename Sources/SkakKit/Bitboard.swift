@@ -11,7 +11,7 @@ public struct Bitboard: Equatable, Hashable {
     
     private(set) var rawValue: UInt64 = 0
     
-    init(rawValue: UInt64) {
+    public init(rawValue: UInt64) {
         self.rawValue = rawValue
     }
     
@@ -29,7 +29,7 @@ public struct Bitboard: Equatable, Hashable {
     /// 09 10 11 12 13 14 15 16
     /// 01 02 03 04 05 06 07 08
     /// ```
-    init(marked position: Position) {
+    public init(marked position: Position) {
         let file = position.file.rawValue
         let rank = position.rank.rawValue
         let exponent = rank * 8 + file
@@ -80,18 +80,18 @@ public struct Bitboard: Equatable, Hashable {
     }
     
     /// Returns the number of pieces this bitboard represents
-    var pieceCount: Int {
+    public var pieceCount: Int {
         self.rawValue.nonzeroBitCount
     }
     
     /// Returns `true` if the board contains pieces, `false` if not
-    var isEmpty: Bool {
+    public var isEmpty: Bool {
         self == 0
     }
     
     /// Returns the pieces on the board isolated to each own bitboard.
     /// If no pieces are represent, an empty array will be returned
-    func isolatedPieces() -> [Bitboard] {
+    public func isolatedPieces() -> [Bitboard] {
         
         guard isEmpty == false else {
             return []
@@ -114,7 +114,7 @@ public struct Bitboard: Equatable, Hashable {
     }
     
     /// Based on the "The parallel prefix-algorithm" from https://www.chessprogramming.org/Flipping_Mirroring_and_Rotating#Horizontal
-    func horizontalMirrored() -> Bitboard {
+    public func horizontalMirrored() -> Bitboard {
         var mirror = self
         
         let k1: Bitboard = 0x5555555555555555
@@ -128,11 +128,11 @@ public struct Bitboard: Equatable, Hashable {
         return mirror
     }
     
-    func verticalMirrored() -> Bitboard {
+    public func verticalMirrored() -> Bitboard {
         return Bitboard(rawValue: rawValue.byteSwapped)
     }
     
-    func flipAntiDiagonal() -> Bitboard {
+    public func flipAntiDiagonal() -> Bitboard {
         
         var t = Bitboard()
         var x = self
@@ -151,7 +151,7 @@ public struct Bitboard: Equatable, Hashable {
         return x
     }
     
-    func flipDiagonal() -> Bitboard {
+    public func flipDiagonal() -> Bitboard {
         
         var t = Bitboard()
         var x = self
@@ -170,11 +170,11 @@ public struct Bitboard: Equatable, Hashable {
         return x
     }
     
-    func turnedClockwise() -> Bitboard {
+    public func turnedClockwise() -> Bitboard {
         return flipDiagonal().verticalMirrored()
     }
     
-    func turnedCounterClockwise() -> Bitboard {
+    public func turnedCounterClockwise() -> Bitboard {
         return flipAntiDiagonal().verticalMirrored()
     }
 }
@@ -186,49 +186,49 @@ extension Bitboard: ExpressibleByIntegerLiteral {
 }
 
 extension Bitboard {
-    static func << (lhs: Bitboard, rhs: Bitboard) -> Bitboard {
+    public static func << (lhs: Bitboard, rhs: Bitboard) -> Bitboard {
         let shifted = lhs.rawValue << rhs.rawValue
         return Bitboard(rawValue: shifted)
     }
     
-    static func >> (lhs: Bitboard, rhs: Bitboard) -> Bitboard {
+    public static func >> (lhs: Bitboard, rhs: Bitboard) -> Bitboard {
         let shifted = lhs.rawValue >> rhs.rawValue
         return Bitboard(rawValue: shifted)
     }
     
-    static func <<= (lhs: inout Bitboard, rhs: Bitboard) {
+    public static func <<= (lhs: inout Bitboard, rhs: Bitboard) {
         lhs = lhs << rhs
     }
     
-    static func >>= (lhs: inout Bitboard, rhs: Bitboard) {
+    public static func >>= (lhs: inout Bitboard, rhs: Bitboard) {
         lhs = lhs >> rhs
     }
     
-    static func & (lhs: Bitboard, rhs: Bitboard) -> Bitboard {
+    public static func & (lhs: Bitboard, rhs: Bitboard) -> Bitboard {
         let ANDed = lhs.rawValue & rhs.rawValue
         return Bitboard(rawValue: ANDed)
     }
     
-    static func | (lhs: Bitboard, rhs: Bitboard) -> Bitboard {
+    public static func | (lhs: Bitboard, rhs: Bitboard) -> Bitboard {
         let ORed = lhs.rawValue | rhs.rawValue
         return Bitboard(rawValue: ORed)
     }
     
     /// XOR of the bitboards
-    static func ^ (lhs: Bitboard, rhs: Bitboard) -> Bitboard {
+    public static func ^ (lhs: Bitboard, rhs: Bitboard) -> Bitboard {
         let XORed = lhs.rawValue ^ rhs.rawValue
         return Bitboard(rawValue: XORed)
     }
     
-    static func > (lhs: Bitboard, rhs: Bitboard) -> Bool {
+    public static func > (lhs: Bitboard, rhs: Bitboard) -> Bool {
         lhs.rawValue > rhs.rawValue
     }
     
-    static func < (lhs: Bitboard, rhs: Bitboard) -> Bool {
+    public static func < (lhs: Bitboard, rhs: Bitboard) -> Bool {
         lhs.rawValue < rhs.rawValue
     }
     
-    static prefix func ~ (board: Bitboard) -> Bitboard {
+    public static prefix func ~ (board: Bitboard) -> Bitboard {
         let inverted = ~board.rawValue
         return Bitboard(rawValue: inverted)
     }
@@ -236,16 +236,16 @@ extension Bitboard {
 
 extension Bitboard {
     /// Hexidecimal masks
-    struct Masks {
-        static let full: Bitboard  = 0xffffffffffffffff
-        static let fileA: Bitboard = 0x101010101010101
-        static let fileB: Bitboard = 0x202020202020202
-        static let fileC: Bitboard = 0x404040404040404
-        static let fileD: Bitboard = 0x808080808080808
-        static let fileE: Bitboard = 0x1010101010101010
-        static let fileF: Bitboard = 0x2020202020202020
-        static let fileG: Bitboard = 0x4040404040404040
-        static let fileH: Bitboard = 0x8080808080808080
+    public struct Masks {
+        public static let full: Bitboard  = 0xffffffffffffffff
+        public static let fileA: Bitboard = 0x101010101010101
+        public static let fileB: Bitboard = 0x202020202020202
+        public static let fileC: Bitboard = 0x404040404040404
+        public static let fileD: Bitboard = 0x808080808080808
+        public static let fileE: Bitboard = 0x1010101010101010
+        public static let fileF: Bitboard = 0x2020202020202020
+        public static let fileG: Bitboard = 0x4040404040404040
+        public static let fileH: Bitboard = 0x8080808080808080
     }
 }
 
@@ -260,7 +260,7 @@ extension Bitboard: CustomStringConvertible {
         }
     }
     
-    var ascii: String {
+    public var ascii: String {
         var board = String()
         var row = [Character]()
         for b in description {
