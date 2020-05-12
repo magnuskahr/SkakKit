@@ -22,13 +22,13 @@ struct KnightMechanics: PieceMechanics {
         let maskGH = Bitboard.Masks.fileG | Bitboard.Masks.fileH
         
         let spot1 = board << 6 & ~maskGH
-        let spot2 = board << 15 & ~maskGH
-        let spot3 = board << 17 & ~maskAB
+        let spot2 = board << 15 & ~Bitboard.Masks.fileH
+        let spot3 = board << 17 & ~Bitboard.Masks.fileA
         let spot4 = board << 10 & ~maskAB
         
         let spot5 = board >> 6 & ~maskAB
-        let spot6 = board >> 15 & ~maskAB
-        let spot7 = board >> 17 & ~maskGH
+        let spot6 = board >> 15 & ~Bitboard.Masks.fileA
+        let spot7 = board >> 17 & ~Bitboard.Masks.fileH
         let spot8 = board >> 10 & ~maskGH
         
         return spot1 | spot2 | spot3 | spot4 | spot5 | spot6 | spot7 | spot8
