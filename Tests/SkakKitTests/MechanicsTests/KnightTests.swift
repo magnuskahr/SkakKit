@@ -52,4 +52,21 @@ class KnightTests: XCTestCase {
         XCTAssertEqual(empty, 0)
     }
     
+    func testKnightMoveFromHFile() {
+        board.mark(Position(file: .H, rank: .three))
+        
+        let attacks = knight.attacks(on: board, as: .white)
+        let expectedAttacks: Bitboard = 0x4020002040
+        
+        XCTAssertEqual(attacks, expectedAttacks)
+    }
+    
+    func testKnightMoveFromAFile() {
+        board.mark(Position(file: .A, rank: .three))
+        
+        let attacks = knight.attacks(on: board, as: .white)
+        let expectedAttacks: Bitboard = 0x204000402
+        
+        XCTAssertEqual(attacks, expectedAttacks)
+    }
 }
