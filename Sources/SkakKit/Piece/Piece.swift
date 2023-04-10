@@ -65,3 +65,9 @@ extension Piece  {
         }
     }
 }
+
+extension Piece: CustomStringConvertible {
+    var description: String {
+        "\(color) \(identifier)"
+    }
+}

@@ -101,8 +101,6 @@ class SlidingMechanicsTests: XCTestCase {
         print(attacks.ascii)
         let expected: Bitboard = 0xE0E00000000000
         XCTAssertEqual(attacks, expected)
-        
-        
     }
     
     func testRankEightAndSevenMiddle() {

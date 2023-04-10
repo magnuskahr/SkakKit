@@ -38,7 +38,6 @@ public struct Bitboard: Equatable, Hashable {
     
     public init() {}
     
-    
     /// Tests a position of being occupied
     /// - Parameter position: Position to test for
     /// - Returns: bool indicating being occupied or not
@@ -76,12 +75,12 @@ public struct Bitboard: Equatable, Hashable {
     }
     
     func attacks(as piece: Piece, colored color: Color) -> Bitboard {
-        return piece.attacks(on: self, as: color)
+        piece.attacks(on: self, as: color)
     }
     
     /// Returns the number of pieces this bitboard represents
     public var pieceCount: Int {
-        self.rawValue.nonzeroBitCount
+        rawValue.nonzeroBitCount
     }
     
     /// Returns `true` if the board contains pieces, `false` if not
@@ -93,7 +92,7 @@ public struct Bitboard: Equatable, Hashable {
     /// If no pieces are represent, an empty array will be returned
     public func isolatedPieces() -> [Bitboard] {
         
-        guard isEmpty == false else {
+        guard !isEmpty else {
             return []
         }
         

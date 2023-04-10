@@ -1,10 +1,3 @@
-//
-//  Game.swift
-//  
-//
-//  Created by Magnus Jensen on 28/06/2019.
-//
-
 import Foundation
 
 /// Game contains all logic
@@ -34,7 +27,7 @@ struct Game {
         
         if let promotable = piece as? Promoteable,
             shouldPromote(candidate: piece, on: move.to),
-            let promoter = promoter {
+            let promoter {
 
             let promotions = promotable.promotions
 //            let promotion = promoter.choose(between: promotions)
@@ -48,7 +41,7 @@ struct Game {
     /// A piece can be promoted if it is promotable. In chess, only the pawn is promotable.
     /// - Parameter candidate: the candidate to promote
     /// - Parameter destination: the destination to promote on
-    internal func shouldPromote(candidate: Piece, on destination: Position) -> Bool {
+    func shouldPromote(candidate: Piece, on destination: Position) -> Bool {
         guard candidate is Promoteable else {
             return false
         }
@@ -62,11 +55,15 @@ struct Game {
     /// Check the attackability of a position.
     /// A position is attackable, if its either free or occupied by the other player
     /// - Parameter position: position to check attackability for
-    internal func attackability(of position: Position) -> Bool {
+    func attackability(of position: Position) -> Bool {
         guard let piece = board.piece(at: position) else {
+            // If the position is free
             return true
         }
-        
+
+        print(piece)
+        print(playerInTurn)
+
         return piece.color != playerInTurn
     }
 }

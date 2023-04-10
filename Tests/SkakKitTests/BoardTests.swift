@@ -84,25 +84,32 @@ class BoardTests: XCTestCase {
         let _ = board.perform(move: move)
         
         let piece = board.piece(at: Positions.empty)
-        XCTAssertNotNil(piece)
-        XCTAssertEqual(piece?.identifier, .pawn)
-        XCTAssertEqual(piece?.color, .white)
+        XCTAssertEqual(piece!, .whitePawn)
     }
     
     func testMoveOverwritesPiece() {
-        let move = Move(from: Positions.wPawn, to: Positions.bPawn)
-        let _ = board.perform(move: move)
-        let piece = board.piece(at: Positions.bPawn)
-        XCTAssertNotNil(piece)
-        XCTAssertEqual(piece?.identifier, .pawn)
-        XCTAssertEqual(piece?.color, .white)
+
+        var board = Board(bitboards: [
+            .whitePawn: 0x4, // C1
+            .blackPawn: 0x800 // D2
+        ])
+
+        let white = Position(file: .C, rank: .one)
+        let black = Position(file: .D, rank: .two)
+
+        let move = Move(from: white, to: black)
+        XCTAssertTrue(board.perform(move: move))
+
+        let piece = board.piece(at: black)
+        XCTAssertEqual(piece!, .whitePawn)
+
     }
 }
 
 // - MARK: Stubs
 struct Positions {
     static let wPawn = Position(file: .A, rank: .two)
-    static let bPawn = Position(file: .B, rank: .two)
+    static let bPawn = Position(file: .B, rank: .seven)
     static let empty = Position(file: .B, rank: .three)
 }
 

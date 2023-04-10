@@ -36,10 +36,10 @@ class GameTests: XCTestCase {
         XCTAssertFalse(attackable)
     }
     
-//    func testOtherColorIsAttackable() {
-//        let attackable = game.attackability(of: Positions.bPawn)
-//        XCTAssertTrue(attackable)
-//    }
+    func testOtherColorIsAttackable() {
+        let attackable = game.attackability(of: Positions.bPawn)
+        XCTAssertTrue(attackable)
+    }
     
     // - MARK: Promoteable tests
     
