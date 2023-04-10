@@ -1,10 +1,3 @@
-//
-//  File.swift
-//  
-//
-//  Created by Magnus Jensen on 11/08/2019.
-//
-
 protocol SlidingPieceMechanics: PieceMechanics { }
 
 extension SlidingPieceMechanics {
@@ -65,8 +58,20 @@ extension SlidingPieceMechanics {
         return left | right
     }
     
-    func fileAttacks(occupied: Bitboard, attackers: Bitboard, mask: Bitboard) -> Bitboard {
-        return 0
+    func fileAttacks(occupied: Bitboard, attackers: Bitboard) -> Bitboard {
+        // Hyperbola works only to the left in the binary sequence (right on the board), so we use rotated boards
+
+        let up = hyperbola(
+            occupied: occupied.turnedClockwise(),
+            attackers: attackers.turnedClockwise()
+        ).turnedCounterClockwise()
+
+        let down = hyperbola(
+            occupied: occupied.turnedCounterClockwise(),
+            attackers: attackers.turnedCounterClockwise()
+        ).turnedClockwise()
+
+        return up | down
     }
     
     func diagonalAttacks(occupied: Bitboard, attackers: Bitboard, mask: Bitboard) -> Bitboard {

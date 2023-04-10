@@ -1,10 +1,3 @@
-//
-//  Bitboard.swift
-//  
-//
-//  Created by Magnus Jensen on 02/07/2019.
-//
-
 import Foundation
 
 public struct Bitboard: Equatable, Hashable {
@@ -72,10 +65,6 @@ public struct Bitboard: Equatable, Hashable {
         }
         self = newData
         return true
-    }
-    
-    func attacks(as piece: Piece, colored color: Color) -> Bitboard {
-        piece.attacks(on: self, as: color)
     }
     
     /// Returns the number of pieces this bitboard represents

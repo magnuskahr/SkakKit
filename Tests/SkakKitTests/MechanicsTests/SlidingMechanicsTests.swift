@@ -36,12 +36,34 @@ class SlidingMechanicsTests: XCTestCase {
         let expectedAttacks: Bitboard = 0x7F
         XCTAssertEqual(attacks, expectedAttacks)
     }
-    
+
     func testWholeFileAttacksAllRanks() {
+        // The whole E file
         let attackers: Bitboard = 0x1010101010101010
         let attacks = stub.rankAttacks(occupied: empty, attackers: attackers)
-        
+
+        // Everything but the E file
         let expected: Bitboard = 0xEFEFEFEFEFEFEFEF
+        XCTAssertEqual(attacks, expected)
+    }
+
+    func testRankAttackBlockedRight() {
+        let attackers: Bitboard = 0x8000000 // D4
+        let blockers: Bitboard = 0x20000000 // F4
+        let attacks = stub.rankAttacks(occupied: blockers, attackers: attackers)
+
+        // The 4th rank, minus D4 and G/H4. F4 is expected as it is attackable.
+        let expected: Bitboard = 0x37000000
+        XCTAssertEqual(attacks, expected)
+    }
+
+    func testWholeRankAttacksAllFiles() {
+        // The whole 5th rank
+        let attackers: Bitboard = 0xFF00000000
+        let attacks = stub.fileAttacks(occupied: empty, attackers: attackers)
+
+        // Everything but the 5th rank
+        let expected: Bitboard = 0xFFFFFF00FFFFFFFF
         XCTAssertEqual(attacks, expected)
     }
  
@@ -215,6 +237,10 @@ extension SlidingMechanicsTests {
     struct BasicStub: SlidingPieceMechanics {
         func attacks(on board: Bitboard, as color: Color) -> Bitboard {
             return 0
+        }
+
+        func reachingSquares(from origins: Bitboard, occupiers: Bitboard, color: Color) -> Bitboard {
+            0
         }
     }
 }

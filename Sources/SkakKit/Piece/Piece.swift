@@ -1,13 +1,5 @@
-//
-//  BBPiece.swift
-//  
-//
-//  Created by Magnus Jensen on 04/07/2019.
-//
-
 struct Piece {
-    
-    
+
     private let mechanics: PieceMechanics
     
     let color: Color
@@ -18,16 +10,16 @@ struct Piece {
         self.mechanics = mechanics
         self.identifier = identifier
     }
-    
-    func attacks(on board: Bitboard, as color: Color) -> Bitboard {
-        mechanics.attacks(on: board, as: color)
+
+    func reachingSquares(from origins: Bitboard, occupiers: Bitboard) -> Bitboard {
+        mechanics.reachingSquares(from: origins, occupiers: occupiers, color: color)
     }
     
     static let whitePawn = Piece(color: .white, mechanics: PawnMechanics(), identifier: .pawn)
     static let blackPawn = Piece(color: .black, mechanics: PawnMechanics(), identifier: .pawn)
     
-    static let whiteRook = Piece(color: .white, mechanics: RookMechanics(), identifier: .rook)
-    static let blackRook = Piece(color: .black, mechanics: RookMechanics(), identifier: .rook)
+    static let whiteRook = Piece(color: .white, mechanics: CrossMechanics(), identifier: .rook)
+    static let blackRook = Piece(color: .black, mechanics: CrossMechanics(), identifier: .rook)
     
     static let whiteBishop = Piece(color: .white, mechanics: PawnMechanics(), identifier: .bishop)
     static let blackBishop = Piece(color: .black, mechanics: PawnMechanics(), identifier: .bishop)

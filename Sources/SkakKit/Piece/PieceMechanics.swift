@@ -1,10 +1,3 @@
-//
-//  PieceMechanics.swift
-//  
-//
-//  Created by Magnus Jensen on 06/05/2020.
-//
-
 protocol PieceMechanics {
-    func attacks(on board: Bitboard, as color: Color) -> Bitboard
+    func reachingSquares(from origins: Bitboard, occupiers: Bitboard, color: Color) -> Bitboard
 }

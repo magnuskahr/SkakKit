@@ -105,16 +105,16 @@ class GameTests: XCTestCase {
         }
     }
     
-//    func testCantMoveWrongColor() {
-//        let move = Move(from: Positions.bPawn, to: Positions.empty)
-//        let result = game.perform(move: move)
-//
-//        switch result {
-//        case .success(_): XCTFail("Not allowed to move wrong color")
-//        case .failure(let error) where error != .wrongColor: XCTFail("Wrong error, should be .wrongColor")
-//        default: break
-//        }
-//    }
+    func testCantMoveWrongColor() {
+        let move = Move(from: Positions.bPawn, to: Positions.empty)
+        let result = game.perform(move: move)
+
+        switch result {
+        case .success(_): XCTFail("Not allowed to move wrong color")
+        case .failure(let error) where error != .wrongColor: XCTFail("Wrong error, should be .wrongColor")
+        default: break
+        }
+    }
     
     func testMoveNeedsDistance() {
         let move = Move(from: Positions.wPawn, to: Positions.wPawn)

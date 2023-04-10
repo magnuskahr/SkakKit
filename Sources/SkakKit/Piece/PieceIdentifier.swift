@@ -1,10 +1,3 @@
-//
-//  PieceIdentifier.swift
-//  
-//
-//  Created by Magnus Jensen on 06/05/2020.
-//
-
 enum PieceIdentifier: Hashable {
     case pawn, rook, bishop, knight, king, queen
     

@@ -80,13 +80,13 @@ class PawnTests: XCTestCase {
     
     func testWhiteAttacksUp() {
         board.mark(Position(file: .C, rank: .one))
-        let attacks = pawn.attacks(on: board, as: .white)
+        let attacks = pawn.reachingSquares(from: board, occupiers: 0, color: .white)
         XCTAssertEqual(attacks, 0b1010_00000000)
     }
     
     func testBlackAttacksDown() {
         board.mark(Position(file: .C, rank: .eight))
-        let attacks = pawn.attacks(on: board, as: .black)
+        let attacks = pawn.reachingSquares(from: board, occupiers: 0, color: .black)
         
         var expected = Bitboard()
         expected.mark(Position(file: .B, rank: .seven))

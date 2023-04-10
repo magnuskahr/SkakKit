@@ -20,7 +20,6 @@ struct Game {
             return .failure(.illegal)
         }
         
-        
 //        guard piece.allows(move: move, on: board) else {
 //            return .failure(.illegal)
 //        }
@@ -61,10 +60,18 @@ struct Game {
             return true
         }
 
-        print(piece)
-        print(playerInTurn)
-
         return piece.color != playerInTurn
+    }
+
+    func moveIsWithinPieceMechanics(piece: Piece, position: Position, endpoint: Position) -> Bool {
+        guard let attackerBoard = board.bitboards[piece] else { return false }
+        // Combine all boards and subtrack the attackers
+        // Subtracking is done using XOR, requiring positions to be unique.
+        let occupiedBoard = board.bitboards.values.reduce(0) { $0 | $1 } ^ attackerBoard
+
+//        let attacks = piece.attacks(on: attackerBoard, as: piece.color)
+        #warning("not done")
+        return true
     }
 }
 

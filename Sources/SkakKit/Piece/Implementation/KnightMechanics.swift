@@ -1,10 +1,3 @@
-//
-//  BBKnight.swift
-//  
-//
-//  Created by Magnus Jensen on 04/07/2019.
-//
-
 import Foundation
 
 struct KnightMechanics: PieceMechanics {
@@ -15,21 +8,20 @@ struct KnightMechanics: PieceMechanics {
     ///      K
     ///  8                5
     ///    7       6
-    
-    func attacks(on board: Bitboard, as color: Color) -> Bitboard {
+    func reachingSquares(from origins: Bitboard, occupiers: Bitboard, color: Color) -> Bitboard {
         
         let maskAB = Bitboard.Masks.fileA | Bitboard.Masks.fileB
         let maskGH = Bitboard.Masks.fileG | Bitboard.Masks.fileH
         
-        let spot1 = board << 6 & ~maskGH
-        let spot2 = board << 15 & ~Bitboard.Masks.fileH
-        let spot3 = board << 17 & ~Bitboard.Masks.fileA
-        let spot4 = board << 10 & ~maskAB
+        let spot1 = origins << 6 & ~maskGH
+        let spot2 = origins << 15 & ~Bitboard.Masks.fileH
+        let spot3 = origins << 17 & ~Bitboard.Masks.fileA
+        let spot4 = origins << 10 & ~maskAB
         
-        let spot5 = board >> 6 & ~maskAB
-        let spot6 = board >> 15 & ~Bitboard.Masks.fileA
-        let spot7 = board >> 17 & ~Bitboard.Masks.fileH
-        let spot8 = board >> 10 & ~maskGH
+        let spot5 = origins >> 6 & ~maskAB
+        let spot6 = origins >> 15 & ~Bitboard.Masks.fileA
+        let spot7 = origins >> 17 & ~Bitboard.Masks.fileH
+        let spot8 = origins >> 10 & ~maskGH
         
         return spot1 | spot2 | spot3 | spot4 | spot5 | spot6 | spot7 | spot8
     }
